@@ -27,18 +27,23 @@ async def mcstatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         server = JavaServer.lookup("177.143.63.131:25565")
         query = server.query()
+        
+        # Ajuste para exibir corretamente os dados disponíveis do QueryResponse
+        jogadores_online = getattr(query.players, 'names', []) if hasattr(query, 'players') and hasattr(query.players, 'names') else []
+        num_jogadores = getattr(query.players, 'online', 'Desconhecido') if hasattr(query, 'players') and hasattr(query.players, 'online') else 'Desconhecido'
+        max_jogadores = getattr(query.players, 'max', 'Desconhecido') if hasattr(query, 'players') and hasattr(query.players, 'max') else 'Desconhecido'
+        motd = query.motd.raw if hasattr(query.motd, 'raw') else str(query.motd)
+
         resposta = (
             f"Servidor online!\n"
-            f"Host IP: {query.host}\n"
-            f"Porta: {query.port}\n"
-            f"MOTD: {query.motd}\n"
-            f"Tipo de jogo: {query.gametype}\n"
+            f"MOTD: {motd}\n"
             f"Mapa: {query.map}\n"
-            f"Jogadores: {query.players.online}/{query.players.max}\n"
-            f"Plugins: {', '.join(query.plugins) if query.plugins else 'Nenhum'}\n"
-            f"Jogadores online: {', '.join(query.players.names) if query.players.names else 'Nenhum'}\n"
-            f"Versão: {query.software.version if hasattr(query.software, 'version') else 'Desconhecida'}"
+            f"Jogadores: {num_jogadores}/{max_jogadores}\n"
+            f"Plugins: {', '.join(query.plugins) if hasattr(query, 'plugins') and query.plugins else 'Nenhum'}\n"
+            f"Jogadores online: {', '.join(jogadores_online) if jogadores_online else 'Nenhum'}"
         )
+        # Se quiser adicionar mais campos, use print(query.__dict__) para descobrir quais existem
+        # Exemplo: print(query.__dict__)
     except Exception as e:
         resposta = f"Servidor offline ou não foi possível obter o status.\nErro: {e}"
     await update.message.reply_text(resposta)
