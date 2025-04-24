@@ -35,7 +35,7 @@ async def mcstatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
         motd = query.motd.raw if hasattr(query.motd, 'raw') else str(query.motd)
 
         resposta = (
-            f"Servidor online!\n"
+            f"Servidor on!\n"
             f"MOTD: {motd}\n"
             f"Mapa: {query.map}\n"
             f"Jogadores: {num_jogadores}/{max_jogadores}\n"
