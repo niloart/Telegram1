@@ -1,0 +1,9 @@
+# Ambiente Python
+.venv/
+__pycache__/
+*.pyc
+bot.log
+.env
+# Outros arquivos temporários
+*.swp
+*.swo
