@@ -22,15 +22,22 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f'Você disse: {update.message.text}')
 
-# Função para mostrar o status do servidor Minecraft
+# Função para mostrar o status do servidor Minecraft usando query()
 async def mcstatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         server = JavaServer.lookup("177.143.63.131:25565")
-        status = server.status()
+        query = server.query()
         resposta = (
             f"Servidor online!\n"
-            f"Jogadores online: {status.players.online}/{status.players.max}\n"
-            f"Versão: {status.version.name}"
+            f"Host IP: {query.host}\n"
+            f"Porta: {query.port}\n"
+            f"MOTD: {query.motd}\n"
+            f"Tipo de jogo: {query.gametype}\n"
+            f"Mapa: {query.map}\n"
+            f"Jogadores: {query.players.online}/{query.players.max}\n"
+            f"Plugins: {', '.join(query.plugins) if query.plugins else 'Nenhum'}\n"
+            f"Jogadores online: {', '.join(query.players.names) if query.players.names else 'Nenhum'}\n"
+            f"Versão: {query.software.version if hasattr(query.software, 'version') else 'Desconhecida'}"
         )
     except Exception as e:
         resposta = f"Servidor offline ou não foi possível obter o status.\nErro: {e}"
